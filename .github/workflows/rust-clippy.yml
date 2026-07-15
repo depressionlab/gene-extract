@@ -7,6 +7,9 @@ on:
   schedule:
     - cron: '20 14 * * 6'
 
+env:
+  CARGO_TERM_COLOR: always
+
 jobs:
   rust-clippy-analyze:
     name: Run Clippy
@@ -22,9 +25,11 @@ jobs:
       - name: Install Rust toolchain
         uses: dtolnay/rust-toolchain@master
         with:
-          profile: minimal
           toolchain: nightly
-          components: clippy, rustfmt
+          components: clippy
+
+      - name: Cache cargo
+        uses: Swatinem/rust-cache@v2
 
       - name: Install required cargo
         run: cargo install clippy-sarif sarif-fmt

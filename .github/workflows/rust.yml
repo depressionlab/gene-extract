@@ -8,10 +8,10 @@ on:
 
 env:
   CARGO_TERM_COLOR: always
+  BIN_NAME: gene-extract
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
     name: Build Rust
 
@@ -23,14 +23,18 @@ jobs:
       uses: dtolnay/rust-toolchain@master
       with:
         toolchain: nightly
-        components: clippy, rustfmt
-        
+
+    - name: Cache cargo
+      uses: Swatinem/rust-cache@v2
+
     - name: Build
       run: cargo +nightly build --verbose
+
     - name: Upload
       uses: actions/upload-artifact@v4
       with:
-        path: target/debug/gff_parser    
+        name: ${{ env.BIN_NAME }}
+        path: target/debug/${{ env.BIN_NAME }}
 
   format:
     runs-on: ubuntu-latest
@@ -43,7 +47,10 @@ jobs:
         uses: dtolnay/rust-toolchain@master
         with:
           toolchain: nightly
-          components: clippy, rustfmt
-          
+          components: rustfmt
+
+      - name: Cache cargo
+        uses: Swatinem/rust-cache@v2
+
       - name: Format
         run: cargo +nightly fmt --check

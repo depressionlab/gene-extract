@@ -1,0 +1,31 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite the associated paper (once published) and/or the software itself as below."
+type: software
+title: "gene-extract: extracting Drosophila ortholog sequences from FlyBase genome FASTA files"
+abstract: >
+  A command-line tool that resolves D. melanogaster gene IDs to their
+  orthologs in other Drosophila species using a FlyBase ortholog mapping,
+  then extracts the matching sequences from a species-specific FlyBase
+  genome FASTA file.
+authors:
+  # TODO: figure out names
+  - alias: "depressionlab"
+    # orcid: "https://orcid.org/0000-0000-0000-0000"
+    # affiliation: "YOUR INSTITUTION"
+version: "0.1.0"
+date-released: "2026-07-15"
+url: "https://github.com/depressionlab/gene-extract"
+repository-code: "https://github.com/depressionlab/gene-extract"
+license: Unlicense
+preferred-citation:
+  type: article
+  title: "TITLE OF YOUR PAPER HERE"
+  authors:
+    - family-names: "LASTNAME"
+      given-names: "FIRSTNAME"
+      orcid: "https://orcid.org/0000-0000-0000-0000"
+      affiliation: "YOUR INSTITUTION"
+  journal: "JOURNAL NAME"
+  year: 2026
+  status: "in preparation"
+  notes: "Manuscript in preparation; update DOI/volume/pages once published."

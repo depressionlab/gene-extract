@@ -1,13 +1,67 @@
 [package]
-name = "gff_parser"
+name = "gene-extract"
 version = "0.1.0"
-edition = "2021"
+edition = "2024"
 license = "UNLICENSE"
-authors = ["Ethan Bennun <ethan_bennun@horacemann.org> (tr4np0rt)"]
+authors = ["depressionlab"]
 
 [dependencies]
-noodles = { version = "0.79", features = ["fasta", "async"] }
-tokio = { version = "1", features = ["full"] }
-serde = { version = "1", features = ["derive"] }
-csv = { version = "1.3" }
+noodles = { version = "0.112", features = ["fasta"] }
+serde = { version = "1.0.228", features = ["derive"] }
+csv = { version = "1.4.0" }
+eyre = { version = "0.6.12" }
+clap = { version = "4.6.1", features = ["derive"] }
+clap_derive = { version = "4.6.1" }
+colored = { version = "3.1.1" }
+reqwest = { version = "0.13.4", features = ["blocking"] }
+flate2 = { version = "1.1.9" }
+indicatif = { version = "0.18.6" }
 # calamine = { version = "0.25" }
+
+[lints.clippy]
+all = { level = "warn", priority = -1 }
+pedantic = { level = "warn", priority = -1 }
+correctness = { level = "warn", priority = -1 }
+perf = { level = "warn", priority = -1 }
+style = { level = "warn", priority = -1 }
+suspicious = { level = "warn", priority = -1 }
+complexity = { level = "warn", priority = -1 }
+nursery = { level = "warn", priority = -1 }
+unnecessary_cast = "warn"
+cast_lossless = "warn"
+cast_possible_truncation = "warn"
+cast_possible_wrap = "warn"
+cast_sign_loss = "warn"
+dbg_macro = "warn"
+deprecated_cfg_attr = "warn"
+separated_literal_suffix = "warn"
+undocumented_unsafe_blocks = "warn"
+allow_attributes = "warn"
+ref_patterns = "warn"
+unwrap_used = "warn"
+expect_used = "warn"
+panic = "warn"
+todo = "warn"
+unimplemented = "warn"
+missing_errors_doc = "allow"
+future_not_send = "allow"
+module_name_repetitions = "allow"
+struct_field_names = "allow"
+cast_precision_loss = "allow"
+missing_panics_doc = "allow"
+wildcard_imports = "allow"
+too_many_lines = "allow"
+
+[lints.rust]
+unused_qualifications = "warn"
+rust_2018_idioms = { level = "warn", priority = -1 }
+trivial_casts = "warn"
+trivial_numeric_casts = "warn"
+unused_allocation = "warn"
+unused_import_braces = "warn"
+dead_code = "warn"
+unsafe_code = "warn"
+unexpected_cfgs = "warn"
+deprecated = "warn"
+deprecated_in_future = "forbid"
+unused_must_use = "deny"
