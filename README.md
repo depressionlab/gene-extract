@@ -1,24 +1,14 @@
-<div align="center">
-
 # gene-extract
 
-**Pull ortholog gene sequences out of FlyBase genome FASTA files!**
-
-![Rust](https://img.shields.io/badge/built%20with-Rust-DEA584?style=for-the-badge&logo=rust&logoColor=black)
-![License](https://img.shields.io/badge/license-Unlicense-8A2BE2?style=for-the-badge)
-![Genomes](https://img.shields.io/badge/data-FlyBase-FF69B4?style=for-the-badge)
-
-</div>
-
----
+Pull ortholog gene sequences out of FlyBase genome FASTA files!
 
 ## What does this do?
 
 You give it:
 
-1. A **FlyBase ortholog TSV** (maps *D. melanogaster* genes -> the equivalent gene ID in another *Drosophila* species)
-2. A **species-specific FASTA** genome file (all the gene sequences for that species)
-3. A list of the **Dmel `FBgn...` gene IDs** you want to isolate
+1. A FlyBase ortholog TSV (maps *D. melanogaster* genes -> the equivalent gene ID in another *Drosophila* species)
+2. A species-specific FASTA genome file (all the gene sequences for that species)
+3. A list of the Dmel `FBgn...` gene IDs you want to isolate
 
 ...and it hands you back a clean FASTA file containing only the matching ortholog sequences for that species.
 
@@ -189,10 +179,10 @@ BibTeX:
 
 ## License
 
-This project is released under **[The Unlicense](https://unlicense.org)** — public domain, no strings attached. Full text in [`LICENSE`](./LICENSE):
+This project is released under **[The Unlicense](https://unlicense.org)**. The full text is available [`LICENSE`](./LICENSE):
 
 <details>
-<summary>Click to expand full license text</summary>
+<summary>Click to expand full license text!</summary>
 
 ```text
 This is free and unencumbered software released into the public domain.
