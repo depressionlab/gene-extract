@@ -104,32 +104,29 @@ fn main() -> Result<()> {
 
 	print_banner();
 
+	// Dmel is the reference genome the ortholog TSV is keyed *from*, not
+	// keyed *to*. There's no "Dmel ortholog of a Dmel gene" row to look
+	// up. Requested Dmel FBgn IDs already ARE the target IDs, so we skip
+	// the ortholog-resolution step entirely and go straight to the FASTA.
+	// (Previously this silently produced zero mappings for `--species
+	// Dmel`, since the TSV's species column never contains "Dmel".)
+	let is_dmel = cli.species.eq_ignore_ascii_case("dmel");
+
 	step("Checking input data");
-	ensure_file(
-		&cli.tsv,
-		Some(cli.tsv_url.as_str()),
-		"ortholog TSV",
-		!cli.offline,
-	)?;
+	if !is_dmel {
+		ensure_file(
+			&cli.tsv,
+			Some(cli.tsv_url.as_str()),
+			"ortholog TSV",
+			!cli.offline,
+		)?;
+	}
 	ensure_file(
 		&cli.fasta,
 		Some(cli.fasta_url.as_str()),
 		"genome FASTA",
 		!cli.offline,
 	)?;
-
-	step("Loading ortholog mappings");
-	info(&format!(
-		"reading {}",
-		cli.tsv.display().to_string().dimmed()
-	));
-	let (mut mappings, all_dmel_genes) = read_tsv(&cli.tsv, &cli.species)?;
-	success(&format!(
-		"loaded {} ortholog mapping(s) for {} ({} Dmel gene(s) total in file)",
-		mappings.len().to_string().bold(),
-		cli.species.cyan().bold(),
-		all_dmel_genes.len().to_string().bold()
-	));
 
 	let default_genes: Vec<String>;
 	let requested_genes: &[String] = if cli.genes.is_empty() {
@@ -139,25 +136,50 @@ fn main() -> Result<()> {
 		&cli.genes
 	};
 
-	step("Resolving genes to ortholog IDs");
-	info(&format!(
-		"resolving {} requested gene(s) for species {}",
-		requested_genes.len().to_string().bold(),
-		cli.species.cyan().bold()
-	));
 	// Dmel gene -> ortholog IDs for `cli.species` (usually just one, occasionally
 	// a couple if FlyBase records more than one candidate ortholog).
 	let mut gene_to_ids: HashMap<String, Vec<String>> = HashMap::new();
 	let mut unmapped_genes = Vec::new();
 	let mut no_species_match = Vec::new();
 
-	for gene in requested_genes {
-		match mappings.remove(gene) {
-			Some(ortholog_ids) => {
-				gene_to_ids.insert(gene.clone(), ortholog_ids);
+	if is_dmel {
+		step("Resolving genes (Dmel direct lookup, no ortholog step)");
+		info(&format!(
+			"species is Dmel -- treating {} requested gene ID(s) as direct FlyBase IDs",
+			requested_genes.len().to_string().bold()
+		));
+		for gene in requested_genes {
+			gene_to_ids.insert(gene.clone(), vec![gene.clone()]);
+		}
+	} else {
+		step("Loading ortholog mappings");
+		info(&format!(
+			"reading {}",
+			cli.tsv.display().to_string().dimmed()
+		));
+		let (mut mappings, all_dmel_genes) = read_tsv(&cli.tsv, &cli.species)?;
+		success(&format!(
+			"loaded {} ortholog mapping(s) for {} ({} Dmel gene(s) total in file)",
+			mappings.len().to_string().bold(),
+			cli.species.cyan().bold(),
+			all_dmel_genes.len().to_string().bold()
+		));
+
+		step("Resolving genes to ortholog IDs");
+		info(&format!(
+			"resolving {} requested gene(s) for species {}",
+			requested_genes.len().to_string().bold(),
+			cli.species.cyan().bold()
+		));
+
+		for gene in requested_genes {
+			match mappings.remove(gene) {
+				Some(ortholog_ids) => {
+					gene_to_ids.insert(gene.clone(), ortholog_ids);
+				}
+				None if all_dmel_genes.contains(gene) => no_species_match.push(gene.as_str()),
+				None => unmapped_genes.push(gene.as_str()),
 			}
-			None if all_dmel_genes.contains(gene) => no_species_match.push(gene.as_str()),
-			None => unmapped_genes.push(gene.as_str()),
 		}
 	}
 	if !unmapped_genes.is_empty() {
