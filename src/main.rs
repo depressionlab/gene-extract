@@ -105,7 +105,7 @@ fn main() -> Result<()> {
 	print_banner();
 
 	// Dmel is the reference genome the ortholog TSV is keyed *from*, not
-	// keyed *to*. There's no "Dmel ortholog of a Dmel gene" row to look
+	// keyed *to* -- there's no "Dmel ortholog of a Dmel gene" row to look
 	// up. Requested Dmel FBgn IDs already ARE the target IDs, so we skip
 	// the ortholog-resolution step entirely and go straight to the FASTA.
 	// (Previously this silently produced zero mappings for `--species
